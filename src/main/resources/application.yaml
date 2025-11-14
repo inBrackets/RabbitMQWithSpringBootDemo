@@ -7,9 +7,14 @@ spring:
     username: guest
     password: guest
     queue:
+      json:
+        name: javaquides_json
       name: javaguides
     exchange:
       name: javaguides_exchange
     routing:
       key:
         name: javaguides_routing_key
+      json:
+        key:
+          name: javaguides_routing_json_key
