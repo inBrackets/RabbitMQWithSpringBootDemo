@@ -3,11 +3,14 @@ package org.example.rabbitmqwithspringbootdemo.publisher;
 import org.example.rabbitmqwithspringbootdemo.dto.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -34,8 +37,17 @@ class RabbitMQJsonProducerTest {
         // Act
         jsonProducer.sendJsonMessage(user);
 
+        // Capture the user argument
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+
         // Assert
         verify(rabbitTemplate, times(1))
-                .convertAndSend("test-json-exchange", "test-json-routing", user);
+                .convertAndSend(eq("test-json-exchange"), eq("test-json-routing"), userCaptor.capture());
+
+        User capturedUser = userCaptor.getValue();
+
+        // Assert the body contains correct name
+        assertThat(capturedUser.getFirstName()).isEqualTo("John");
+        assertThat(capturedUser.getLastName()).isEqualTo("Doe");
     }
 }
