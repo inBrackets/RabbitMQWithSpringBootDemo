@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: RabbitMQWithSpringBootDemo
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    queue:
+      name: javaguides
+    exchange:
+      name: javaguides_exchange
+    routing:
+      key:
+        name: javaguides_routing_key
