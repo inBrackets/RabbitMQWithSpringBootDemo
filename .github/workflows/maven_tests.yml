@@ -1,41 +1,44 @@
-name: Maven Tests
+name: 🚀 Maven Tests
 
 on:
-  push:
-  pull_request:
+  push:              # 🔄 Run on every push
+  pull_request:      # 🔍 Run on PRs
+  workflow_dispatch: # ▶️ Allow manual execution
+
+permissions:
+  contents: read
+  checks: write
 
 jobs:
   test:
+    name: 🧪 Run Maven Tests
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-        # Setup correct JDK version (change if needed)
-      - name: Set up JDK
+      - name: ☕ Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
           cache: maven
 
-      - name: Run Maven tests
+      - name: 🏗️ Build & Test with Maven
         run: mvn -B test
 
-      # Upload JUnit XML results as an Action artifact
-      - name: Upload test results
+      - name: 📦 Upload test results (JUnit XML)
         uses: actions/upload-artifact@v4
         with:
-          name: junit-test-results
+          name: 📝 junit-test-results
           path: "**/target/surefire-reports/*.xml"
           if-no-files-found: warn
 
-      # Optional: Publish test results summary in UI
-      - name: Publish test report
+      - name: 📊 Publish test report summary
         uses: dorny/test-reporter@v1
-        if: always() # ensures it runs even if tests fail
+        if: always()
         with:
-          name: Maven Tests
+          name: 🧾 Maven Tests
           path: "**/target/surefire-reports/*.xml"
           reporter: java-junit
